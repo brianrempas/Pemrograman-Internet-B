@@ -24,8 +24,15 @@
         <label>Nama:</label><br>
         <input type="text" name="nama" value="{{ old('nama') }}"><br><br>
 
-        <label>Prodi:</label><br>
-        <input type="text" name="prodi" value="{{ old('prodi') }}"><br><br>
+        <label>Program Studi:</label><br>
+        <select name="prodi_id">
+            <option value="">-- Pilih Prodi --</option>
+            @foreach($prodis as $p)
+                <option value="{{ $p->id }}" {{ old('prodi_id') == $p->id ? 'selected' : '' }}>
+                    {{ $p->nama_prodi }}
+                </option>
+            @endforeach
+        </select><br><br>
 
         <button type="submit">Simpan</button>
     </form>

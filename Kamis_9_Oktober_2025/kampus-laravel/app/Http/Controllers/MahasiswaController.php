@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Mahasiswa;
+use App\Models\Prodi;
 
 class MahasiswaController extends Controller
 {
@@ -16,35 +17,38 @@ class MahasiswaController extends Controller
 
     public function create()
     {
-        return view('mahasiswa.create');
+        $prodis = Prodi::all();
+        return view('mahasiswa.create', compact('prodis'));
     }
+
+    public function edit($id)
+    {
+        $m = Mahasiswa::findOrFail($id);
+        $prodis = Prodi::all();
+        return view('mahasiswa.edit', compact('m', 'prodis'));
+    }
+
 
     public function store(Request $request)
     {
         $request->validate([
             'nim' => 'required|min:4|unique:mahasiswa,nim',
             'nama' => 'required',
-            'prodi' => 'required'
+            'prodi_id' => 'required|exists:prodi,id'
         ]);
 
-        // simpan data baru ke database
-        Mahasiswa::create($request->only(['nim', 'nama', 'prodi']));
+        Mahasiswa::create($request->only(['nim', 'nama', 'prodi_id']));
 
         return redirect('/mahasiswa')->with('success', 'Mahasiswa berhasil ditambahkan.');
     }
 
-    public function edit($id)
-    {
-        $m = Mahasiswa::findOrFail($id);
-        return view('mahasiswa.edit', compact('m'));
-    }
 
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nim' => 'required|min:4|unique:mahasiswa,nim,'.$id, // ignore current ID
+            'nim' => 'required',
             'nama' => 'required',
-            'prodi' => 'required'
+            'prodi_id' => 'required|exists:prodi,id',
         ]);
 
         // update data di database

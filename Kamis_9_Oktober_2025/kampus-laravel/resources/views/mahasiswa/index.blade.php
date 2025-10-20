@@ -5,6 +5,8 @@
     <title>Daftar Mahasiswa</title>
 </head>
 <body>
+    <a href="{{ url('/') }}">← Kembali ke halaman utama</a>
+
     <h1>Daftar Mahasiswa</h1>
 
     {{-- Flash messages --}}
@@ -20,31 +22,33 @@
 
     <h3>Daftar Mahasiswa</h3>
 
-<table border="1" cellpadding="5">
-    <tr>
-        <th>ID</th>
-        <th>NIM</th>
-        <th>Nama</th>
-        <th>Prodi</th>
-        <th>Aksi</th>
-    </tr>
-    @foreach ($mahasiswa as $m)
+    <table border="1" cellpadding="5">
         <tr>
-            <td>{{ $m['id'] }}</td>
-            <td>{{ $m['nim'] }}</td>
-            <td>{{ $m['nama'] }}</td>
-            <td>{{ $m['prodi'] }}</td>
-            <td>
-                <a href="{{ url('/mahasiswa/'.$m['id'].'/edit') }}">Edit</a> |
-                <form action="{{ url('/mahasiswa/'.$m['id']) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit">Hapus</button>
-                </form>
-            </td>
+            <th>ID</th>
+            <th>NIM</th>
+            <th>Nama</th>
+            <th>Prodi</th>
+            <th>Fakultas</th>
+            <th>Aksi</th>
         </tr>
-    @endforeach
-</table>
+        @foreach ($mahasiswa as $m)
+            <tr>
+                <td>{{ $m->id }}</td>
+                <td>{{ $m->nim }}</td>
+                <td>{{ $m->nama }}</td>
+                <td>{{ $m->prodi->nama_prodi ?? '-' }}</td>
+                <td>{{ $m->prodi->fakultas->nama_fakultas ?? '-' }}</td>
+                <td>
+                    <a href="{{ url('/mahasiswa/'.$m->id.'/edit') }}">Edit</a> |
+                    <form action="{{ url('/mahasiswa/'.$m->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit">Hapus</button>
+                    </form>
+                </td>
+            </tr>
+        @endforeach
+    </table>
 
 </body>
 </html>
